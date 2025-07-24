@@ -67,12 +67,10 @@ class TrackerEditor(_PluginBase):
 
     def task(self):
         tracker_configs: List[str] = self._tracker_config.split("\n")
-        tracker_dict = {}
-        for tracker_config in tracker_configs:
-            if tracker_config.count('|') == 1:
-                tracker_dict[tracker_config.split('|')[0]] = tracker_config.split('|')[1]
-            else:
-                logger.error(f"配置行错误: {tracker_config}")
+
+        like_word = tracker_configs[0].split('|')[0]
+        update_word = tracker_configs[0].split('|')[1]
+        logger.info(f"配置：{like_word} 替换为\n {update_word}")
         logger.info(f"{'*' * 30}TrackerEditor: 开始执行Tracker替换{'*' * 30}")
         torrent_total_cnt: int = 0
         torrent_update_cnt: int = 0
@@ -88,12 +86,11 @@ class TrackerEditor(_PluginBase):
             for torrent in torrent_list:
                 new_tracker_list = []
                 for tracker in torrent.tracker_list:
-                    for target_domain in tracker_dict.keys():
-                        if target_domain in tracker:
-                            new_url = tracker_dict[target_domain]
-                            new_tracker_list.append(new_url)
-                            logger.info(f"{tracker} 替换为\n {new_url}")
-                            torrent_update_cnt += 1
+                    if like_word in tracker:
+                        new_url = update_word
+                        new_tracker_list.append(new_url)
+                        logger.info(f"{tracker} 替换为\n {new_url}")
+                        torrent_update_cnt += 1
                     else:
                         new_tracker_list.append(tracker)
                 if int(tr_version[0]) >= 4:
