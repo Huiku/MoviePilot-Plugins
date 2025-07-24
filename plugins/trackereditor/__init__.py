@@ -21,9 +21,9 @@ class TrackerEditor(_PluginBase):
     # 插件版本
     plugin_version = "1.7"
     # 插件作者
-    plugin_author = "honue"
+    plugin_author = "Huiku"
     # 作者主页
-    author_url = "https://github.com/honue"
+    author_url = "https://github.com/Huiku/MoviePilot-Plugins"
     # 插件配置项ID前缀
     plugin_config_prefix = "trackereditor_"
     # 加载顺序
