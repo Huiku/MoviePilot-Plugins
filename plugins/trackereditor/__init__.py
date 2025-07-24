@@ -13,7 +13,7 @@ from app.schemas import NotificationType
 
 class TrackerEditor(_PluginBase):
     # 插件名称
-    plugin_name = "Tracker替换"
+    plugin_name = "Tracker替换2"
     # 插件描述
     plugin_desc = "批量替换种子tracker，支持周期性巡检（如为TR，仅支持4.0以上版本）"
     # 插件图标
@@ -76,24 +76,7 @@ class TrackerEditor(_PluginBase):
         logger.info(f"{'*' * 30}TrackerEditor: 开始执行Tracker替换{'*' * 30}")
         torrent_total_cnt: int = 0
         torrent_update_cnt: int = 0
-        if self._downloader_type == "qbittorrent":
-            self._downloader = Qbittorrent(self._host, self._port, self._username, self._password)
-            torrent_info_list: TorrentInfoList
-            torrent_info_list, error = self._downloader.get_torrents()
-            torrent_total_cnt = len(torrent_info_list)
-            if error:
-                return
-            for torrent in torrent_info_list:
-                for tracker in torrent.trackers:
-                    for target_domain in tracker_dict.keys():
-                        if target_domain in tracker.url:
-                            original_url = tracker.url
-                            new_url = tracker.url.replace(target_domain, tracker_dict[target_domain])
-                            logger.info(f"{original_url} 替换为\n {new_url}")
-                            torrent.edit_tracker(orig_url=original_url, new_url=new_url)
-                        torrent_update_cnt += 1
-
-        elif self._downloader_type == "transmission":
+        if self._downloader_type == "transmission":
             self._downloader = Transmission(self._host, self._port, self._username, self._password)
             tr_version = self._downloader.get_session().get('version')
             # "4.0.3 (6b0e49bbb2)"  "3.00 (bb6b5a062e)"
@@ -107,7 +90,7 @@ class TrackerEditor(_PluginBase):
                 for tracker in torrent.tracker_list:
                     for target_domain in tracker_dict.keys():
                         if target_domain in tracker:
-                            new_url = tracker.replace(target_domain, tracker_dict[target_domain])
+                            new_url = tracker_dict[target_domain]
                             new_tracker_list.append(new_url)
                             logger.info(f"{tracker} 替换为\n {new_url}")
                             torrent_update_cnt += 1
